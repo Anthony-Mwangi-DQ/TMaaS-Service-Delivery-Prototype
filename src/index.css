@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* DQ TMaaS Design System - Professional B2B SaaS */
+
+@layer base {
+  :root {
+    /* Core palette */
+    --background: 210 20% 98%; /* #F9FAFB */
+    --foreground: 220 13% 18%; /* Dark slate for text */
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 13% 18%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 13% 18%;
+
+    /* Primary - DQ Orange #fb5535 */
+    --primary: 12 96% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary - Subtle gray-blue */
+    --secondary: 214 32% 91%;
+    --secondary-foreground: 220 13% 18%;
+
+    /* Muted surfaces */
+    --muted: 210 20% 96%;
+    --muted-foreground: 215 14% 45%;
+
+    /* Accent */
+    --accent: 12 96% 95%;
+    --accent-foreground: 12 96% 45%;
+
+    /* Status colors */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Info */
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
+
+    /* UI elements */
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 12 96% 60%;
+    --radius: 0.5rem;
+
+    /* Sidebar - Light professional */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 220 13% 46%;
+    --sidebar-primary: 12 96% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 20% 96%;
+    --sidebar-accent-foreground: 220 13% 18%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 12 96% 60%;
+    --sidebar-muted: 215 14% 65%;
+
+    /* Charts */
+    --chart-1: 12 96% 60%;
+    --chart-2: 142 76% 36%;
+    --chart-3: 199 89% 48%;
+    --chart-4: 38 92% 50%;
+    --chart-5: 262 83% 58%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}
+
+@layer components {
+  /* Card variants - explicit backgrounds for proper rendering */
+  .card-elevated {
+    @apply bg-card rounded-lg border border-border shadow-sm;
+    will-change: auto;
+    transform: translateZ(0);
+  }
+
+  .card-interactive {
+    @apply card-elevated transition-all duration-200 hover:shadow-md hover:border-primary/20;
+  }
+
+  /* Status badges */
+  .status-on-track {
+    @apply bg-success/10 text-success border border-success/20;
+  }
+
+  .status-at-risk {
+    @apply bg-warning/10 text-warning border border-warning/20;
+  }
+
+  .status-blocked {
+    @apply bg-destructive/10 text-destructive border border-destructive/20;
+  }
+
+  .status-pending {
+    @apply bg-info/10 text-info border border-info/20;
+  }
+
+  /* Milestone styles */
+  .milestone-complete {
+    @apply bg-success text-success-foreground;
+  }
+
+  .milestone-current {
+    @apply bg-primary text-primary-foreground ring-4 ring-primary/20;
+  }
+
+  .milestone-upcoming {
+    @apply bg-muted text-muted-foreground;
+  }
+
+  /* Priority indicators */
+  .priority-high {
+    @apply border-l-4 border-l-destructive;
+  }
+
+  .priority-medium {
+    @apply border-l-4 border-l-warning;
+  }
+
+  .priority-low {
+    @apply border-l-4 border-l-info;
+  }
+
+  /* Table styles */
+  .table-header {
+    @apply bg-muted/50 text-muted-foreground text-xs font-semibold uppercase tracking-wider;
+  }
+
+  /* Navigation active state */
+  .nav-active {
+    @apply bg-sidebar-accent text-sidebar-primary font-medium;
+  }
+}
