@@ -509,14 +509,20 @@ function SessionCard({ session, isPast = false }: { session: Session; isPast?: b
 export function WorkingSessions() {
   return (
     <div className="card-elevated p-6">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-info/10">
-          <Users className="h-5 w-5 text-info" />
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-info/10">
+            <Users className="h-5 w-5 text-info" />
+          </div>
+          <div>
+            <h2 className="text-base font-semibold text-foreground">Working Sessions</h2>
+            <p className="text-sm text-muted-foreground">{upcomingSessions.length} upcoming, {pastSessions.length} past</p>
+          </div>
         </div>
-        <div>
-          <h2 className="text-base font-semibold text-foreground">Working Sessions</h2>
-          <p className="text-sm text-muted-foreground">{upcomingSessions.length} upcoming, {pastSessions.length} past</p>
-        </div>
+        <Button size="sm" className="bg-primary hover:bg-primary/90">
+          <Calendar className="h-4 w-4 mr-2" />
+          Request a Session
+        </Button>
       </div>
 
       <Tabs defaultValue="upcoming" className="w-full">

@@ -62,33 +62,6 @@ const pendingClientActions = [
   }
 ];
 
-const upcomingDeadlines = [
-  {
-    id: "1",
-    title: "MS03 Practice Playbook & Procedures",
-    date: "05/02/2026",
-    daysUntil: 7,
-    status: "at-risk" as const,
-    type: "milestone" as const
-  },
-  {
-    id: "2",
-    title: "ABACUS Vendor Decision",
-    date: "29/01/2026",
-    daysUntil: 0,
-    status: "today" as const,
-    type: "dependency" as const
-  },
-  {
-    id: "3",
-    title: "MS04 System Implementation",
-    date: "02/03/2026",
-    daysUntil: 32,
-    status: "on-track" as const,
-    type: "milestone" as const
-  }
-];
-
 const nextSession = {
   date: "26/02/2024",
   time: "10:00 AM",
@@ -113,79 +86,172 @@ export function OverviewSummary() {
 
   return (
     <div className="space-y-6">
-      {/* Active Milestones Status */}
-      <Card>
+      {/* End-to-End Progress Status - Most Prominent */}
+      <Card className="border-l-4 border-l-primary">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Target className="h-4 w-4 text-primary" />
-              <CardTitle className="text-sm font-medium">Active Milestones</CardTitle>
-              <Badge variant="outline" className="text-xs bg-info/10 text-info border-info/20">
-                2 In Progress
-              </Badge>
+              <TrendingUp className="h-5 w-5 text-primary" />
+              <CardTitle className="text-base font-semibold">Project Progress Status</CardTitle>
             </div>
-            <Button variant="ghost" size="sm" className="text-xs h-7" asChild>
-              <Link to="#delivery">
-                View All
-                <ArrowRight className="h-3 w-3 ml-1" />
-              </Link>
-            </Button>
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="text-xs bg-success/10 text-success border-success/20">
+                50% Complete
+              </Badge>
+              <Button variant="ghost" size="sm" className="text-xs h-7" asChild>
+                <Link to="#delivery">
+                  View Details
+                  <ArrowRight className="h-3 w-3 ml-1" />
+                </Link>
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
-            {/* MS03 - At Risk */}
-            <div className="p-3 rounded-lg border border-warning/30 bg-warning/5">
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <Badge variant="secondary" className="text-xs font-mono">MS03</Badge>
-                  <span className="text-sm font-semibold">Practice Playbook & Procedures</span>
-                </div>
-                <Badge variant="outline" className="text-xs bg-warning/10 text-warning border-warning/20">
-                  <AlertTriangle className="h-3 w-3 mr-1" />
-                  At Risk
-                </Badge>
+          {/* Overall Progress Bar */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-foreground">Overall Delivery Progress</span>
+              <span className="text-sm font-semibold text-primary">2 of 4 Milestones Delivered</span>
+            </div>
+            <div className="h-3 bg-muted rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-success via-primary to-info rounded-full" style={{ width: "50%" }} />
+            </div>
+            <div className="flex items-center justify-between mt-2 text-xs text-muted-foreground">
+              <span>Contract Value: SAR 1,273K</span>
+              <span>Delivered Value: SAR 636K</span>
+            </div>
+          </div>
+
+          {/* Three-Column Status View */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* What's Completed */}
+            <div className="p-4 rounded-lg bg-success/5 border border-success/20">
+              <div className="flex items-center gap-2 mb-3">
+                <CheckCircle2 className="h-4 w-4 text-success" />
+                <h3 className="text-sm font-semibold text-success">Completed</h3>
               </div>
-              <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-4">
-                  <div>
-                    <span className="text-muted-foreground">Target: </span>
-                    <span className="font-medium">05/02/2026</span>
+              <div className="space-y-2">
+                <div className="flex items-start gap-2">
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-success/20 shrink-0 mt-0.5">
+                    <CheckCircle2 className="h-3 w-3 text-success" />
                   </div>
-                  <div>
-                    <span className="text-muted-foreground">Value: </span>
-                    <span className="font-medium">SAR 318K</span>
+                  <div className="flex-1">
+                    <p className="text-xs font-medium text-foreground">MS01: Project Kickoff</p>
+                    <p className="text-xs text-muted-foreground">Delivered 07/03/2025</p>
+                    <p className="text-xs text-success font-medium">SAR 318K • Paid</p>
                   </div>
                 </div>
-                <span className="text-warning font-medium">6 days remaining</span>
+                <div className="flex items-start gap-2">
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-success/20 shrink-0 mt-0.5">
+                    <CheckCircle2 className="h-3 w-3 text-success" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs font-medium text-foreground">MS02: GRC Design Summary</p>
+                    <p className="text-xs text-muted-foreground">Delivered 06/01/2026</p>
+                    <p className="text-xs text-warning font-medium">SAR 318K • Pending Acceptance</p>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* MS04 - On Track */}
-            <div className="p-3 rounded-lg border border-border bg-muted/30">
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <Badge variant="secondary" className="text-xs font-mono">MS04</Badge>
-                  <span className="text-sm font-semibold">System Implementation & Deployment</span>
-                </div>
-                <Badge variant="outline" className="text-xs bg-success/10 text-success border-success/20">
-                  <CheckCircle2 className="h-3 w-3 mr-1" />
-                  On Track
-                </Badge>
+            {/* What's In Progress */}
+            <div className="p-4 rounded-lg bg-info/5 border border-info/20">
+              <div className="flex items-center gap-2 mb-3">
+                <Clock className="h-4 w-4 text-info" />
+                <h3 className="text-sm font-semibold text-info">In Progress</h3>
               </div>
-              <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-4">
-                  <div>
-                    <span className="text-muted-foreground">Target: </span>
-                    <span className="font-medium">02/03/2026</span>
+              <div className="space-y-2">
+                <div className="flex items-start gap-2">
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-warning/20 shrink-0 mt-0.5">
+                    <AlertTriangle className="h-3 w-3 text-warning" />
                   </div>
-                  <div>
-                    <span className="text-muted-foreground">Value: </span>
-                    <span className="font-medium">SAR 318K</span>
+                  <div className="flex-1">
+                    <p className="text-xs font-medium text-foreground">MS03: Practice Playbook</p>
+                    <p className="text-xs text-muted-foreground">Target: 05/02/2026</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+                        <div className="h-full bg-warning rounded-full" style={{ width: "60%" }} />
+                      </div>
+                      <span className="text-xs font-medium text-warning">60%</span>
+                    </div>
+                    <p className="text-xs text-warning font-medium mt-1">At Risk • 6 days left</p>
                   </div>
                 </div>
-                <span className="text-muted-foreground">31 days remaining</span>
+                <div className="flex items-start gap-2">
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-info/20 shrink-0 mt-0.5">
+                    <Clock className="h-3 w-3 text-info" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs font-medium text-foreground">MS04: System Implementation</p>
+                    <p className="text-xs text-muted-foreground">Target: 02/03/2026</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+                        <div className="h-full bg-info rounded-full" style={{ width: "35%" }} />
+                      </div>
+                      <span className="text-xs font-medium text-info">35%</span>
+                    </div>
+                    <p className="text-xs text-success font-medium mt-1">On Track • 31 days left</p>
+                  </div>
+                </div>
               </div>
+            </div>
+
+            {/* What's Coming Next */}
+            <div className="p-4 rounded-lg bg-muted/30 border border-border">
+              <div className="flex items-center gap-2 mb-3">
+                <Target className="h-4 w-4 text-muted-foreground" />
+                <h3 className="text-sm font-semibold text-foreground">Coming Next</h3>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-start gap-2">
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 shrink-0 mt-0.5">
+                    <span className="text-xs font-bold text-primary">1</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs font-medium text-foreground">MS03 Acceptance</p>
+                    <p className="text-xs text-muted-foreground">Expected: 05/02/2026</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 shrink-0 mt-0.5">
+                    <span className="text-xs font-bold text-primary">2</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs font-medium text-foreground">MS04 Delivery</p>
+                    <p className="text-xs text-muted-foreground">Expected: 02/03/2026</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 shrink-0 mt-0.5">
+                    <span className="text-xs font-bold text-primary">3</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs font-medium text-foreground">Project Closure</p>
+                    <p className="text-xs text-muted-foreground">Expected: Mar 2026</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Key Metrics Row */}
+          <div className="grid grid-cols-4 gap-4 mt-4 pt-4 border-t border-border">
+            <div className="text-center">
+              <p className="text-2xl font-bold text-success">2</p>
+              <p className="text-xs text-muted-foreground">Completed</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-bold text-info">2</p>
+              <p className="text-xs text-muted-foreground">In Progress</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-bold text-warning">1</p>
+              <p className="text-xs text-muted-foreground">At Risk</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-bold text-primary">50%</p>
+              <p className="text-xs text-muted-foreground">Overall Progress</p>
             </div>
           </div>
         </CardContent>
@@ -307,62 +373,8 @@ export function OverviewSummary() {
         </CardContent>
       </Card>
 
-      {/* Upcoming Deadlines */}
-      <Card className="lg:col-span-1">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Target className="h-4 w-4 text-primary" />
-              <CardTitle className="text-sm font-medium">Upcoming Deadlines</CardTitle>
-              <span className="text-xs text-muted-foreground">(Next 7 days)</span>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            {upcomingDeadlines.slice(0, 3).map((item) => (
-              <div 
-                key={item.id}
-                className={cn(
-                  "flex items-center justify-between p-3 rounded-lg border",
-                  item.status === "today" && "bg-info/5 border-info/30",
-                  item.status === "at-risk" && "bg-warning/5 border-warning/30",
-                  item.status === "on-track" && "bg-muted/30"
-                )}
-              >
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Badge variant="outline" className="text-xs">
-                      {item.type === "milestone" ? "Milestone" : "Dependency"}
-                    </Badge>
-                    {item.status === "today" && (
-                      <Badge variant="outline" className="text-xs bg-info/10 text-info border-info/20">
-                        TODAY
-                      </Badge>
-                    )}
-                    {item.status === "at-risk" && (
-                      <AlertTriangle className="h-3 w-3 text-warning" />
-                    )}
-                  </div>
-                  <p className="text-sm font-medium text-foreground">{item.title}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    {item.date} • {item.daysUntil === 0 ? "Today" : `${item.daysUntil} days`}
-                  </p>
-                </div>
-                <Button variant="ghost" size="sm" className="text-xs h-7" asChild>
-                  <Link to="#delivery">
-                    View
-                    <ArrowRight className="h-3 w-3 ml-1" />
-                  </Link>
-                </Button>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Next Working Session */}
-      <Card className="lg:col-span-1">
+      <Card className="lg:col-span-2">
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2">
             <Users className="h-4 w-4 text-info" />

@@ -53,14 +53,12 @@ export function AppSidebar() {
   return (
     <aside className="fixed left-0 top-0 z-40 h-screen w-64 bg-sidebar border-r border-sidebar-border flex flex-col">
       {/* Logo */}
-      <div className="flex h-16 items-center gap-3 px-6 border-b border-sidebar-border">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-          <span className="text-lg font-bold text-primary-foreground">DQ</span>
-        </div>
-        <div>
-          <span className="text-base font-semibold text-foreground">TMaaS</span>
-          <p className="text-xs text-muted-foreground">Service Delivery</p>
-        </div>
+      <div className="flex h-16 items-center px-6 border-b border-sidebar-border">
+        <img 
+          src="/tmaaS-logo.png" 
+          alt="TMaaS Logo" 
+          className="h-8 w-auto"
+        />
       </div>
 
       {/* Navigation */}

@@ -309,51 +309,115 @@ export function CommercialsTab() {
     .reduce((sum, co) => sum + co.impact, 0);
 
   const adjustedContractValue = mockServiceInfo.contractValue + changeOrderImpact;
+  
+  // Calculate payment summary
+  const totalPaid = milestonePayments.filter(m => m.status === "paid").reduce((sum, m) => sum + m.value, 0);
+  const totalInvoiced = milestonePayments.filter(m => m.status === "invoiced").reduce((sum, m) => sum + m.value, 0);
+  const totalApproved = milestonePayments.filter(m => m.status === "approved").reduce((sum, m) => sum + m.value, 0);
+  const totalInDelivery = milestonePayments.filter(m => m.status === "in-delivery").reduce((sum, m) => sum + m.value, 0);
 
   return (
     <div className="space-y-6">
-      {/* Service Request Information */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-              <Hash className="h-5 w-5 text-primary" />
-            </div>
+      {/* Payment Status Overview - HERO SECTION */}
+      <Card className="border-l-4 border-l-primary">
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-base">Service Request Information</CardTitle>
-              <p className="text-sm text-muted-foreground">Contract and engagement details</p>
+              <CardTitle className="text-lg">Payment Status</CardTitle>
+              <p className="text-sm text-muted-foreground mt-1">
+                Contract value and payment tracking
+              </p>
             </div>
+            <Badge variant="outline" className="bg-success/10 text-success border-success/20">
+              {mockServiceInfo.status}
+            </Badge>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="space-y-1.5">
-              <p className="text-sm text-muted-foreground">Service Order No.</p>
-              <p className="font-mono font-semibold text-foreground">{mockServiceInfo.serviceOrderNo}</p>
+          {/* Contract Value Summary */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div className="p-4 rounded-lg bg-muted/50 border border-border">
+              <p className="text-xs text-muted-foreground mb-1">Total Contract</p>
+              <p className="text-2xl font-bold text-foreground">
+                SAR {(adjustedContractValue / 1000).toFixed(0)}K
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {mockServiceInfo.serviceOrderNo}
+              </p>
             </div>
-            <div className="space-y-1.5">
-              <p className="text-sm text-muted-foreground">Service Name</p>
-              <p className="font-medium text-foreground">{mockServiceInfo.serviceName}</p>
+            
+            <div className="p-4 rounded-lg bg-success/10 border border-success/20">
+              <p className="text-xs text-muted-foreground mb-1">Paid</p>
+              <p className="text-2xl font-bold text-success">
+                SAR {(totalPaid / 1000).toFixed(0)}K
+              </p>
+              <p className="text-xs text-success mt-1">
+                {Math.round((totalPaid / adjustedContractValue) * 100)}% collected
+              </p>
             </div>
-            <div className="space-y-1.5">
-              <p className="text-sm text-muted-foreground">Status</p>
-              <div>
-                <Badge variant="outline" className="bg-success/10 text-success border-success/20">
-                  {mockServiceInfo.status}
-                </Badge>
+            
+            <div className="p-4 rounded-lg bg-warning/10 border border-warning/20">
+              <p className="text-xs text-muted-foreground mb-1">Approved (Ready to Invoice)</p>
+              <p className="text-2xl font-bold text-warning">
+                SAR {(totalApproved / 1000).toFixed(0)}K
+              </p>
+              <p className="text-xs text-warning mt-1">
+                Awaiting invoice
+              </p>
+            </div>
+            
+            <div className="p-4 rounded-lg bg-info/10 border border-info/20">
+              <p className="text-xs text-muted-foreground mb-1">In Delivery</p>
+              <p className="text-2xl font-bold text-info">
+                SAR {(totalInDelivery / 1000).toFixed(0)}K
+              </p>
+              <p className="text-xs text-info mt-1">
+                Work in progress
+              </p>
+            </div>
+          </div>
+
+          {/* Visual Progress Bar */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-sm">
+              <span className="font-medium text-foreground">Payment Progress</span>
+              <span className="text-muted-foreground">
+                {Math.round((totalPaid / adjustedContractValue) * 100)}% of contract value paid
+              </span>
+            </div>
+            <div className="h-4 bg-muted rounded-full overflow-hidden flex">
+              <div 
+                className="bg-success flex items-center justify-center text-[10px] font-medium text-white"
+                style={{ width: `${(totalPaid / adjustedContractValue) * 100}%` }}
+              >
+                {totalPaid > 0 && `${Math.round((totalPaid / adjustedContractValue) * 100)}%`}
+              </div>
+              <div 
+                className="bg-warning flex items-center justify-center text-[10px] font-medium text-white"
+                style={{ width: `${(totalApproved / adjustedContractValue) * 100}%` }}
+              >
+                {totalApproved > 0 && `${Math.round((totalApproved / adjustedContractValue) * 100)}%`}
+              </div>
+              <div 
+                className="bg-info flex items-center justify-center text-[10px] font-medium text-white"
+                style={{ width: `${(totalInDelivery / adjustedContractValue) * 100}%` }}
+              >
+                {totalInDelivery > 0 && `${Math.round((totalInDelivery / adjustedContractValue) * 100)}%`}
               </div>
             </div>
-            <div className="space-y-1.5">
-              <p className="text-sm text-muted-foreground">Requested By</p>
-              <p className="font-medium text-foreground">{mockServiceInfo.requestedBy}</p>
-            </div>
-            <div className="space-y-1.5">
-              <p className="text-sm text-muted-foreground">Organization</p>
-              <p className="font-medium text-foreground">{mockServiceInfo.organization}</p>
-            </div>
-            <div className="space-y-1.5">
-              <p className="text-sm text-muted-foreground">Requested Date</p>
-              <p className="font-medium text-foreground">{mockServiceInfo.requestedDate}</p>
+            <div className="flex items-center gap-4 text-xs">
+              <div className="flex items-center gap-1.5">
+                <div className="w-3 h-3 rounded-sm bg-success"></div>
+                <span className="text-muted-foreground">Paid</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-3 h-3 rounded-sm bg-warning"></div>
+                <span className="text-muted-foreground">Approved</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-3 h-3 rounded-sm bg-info"></div>
+                <span className="text-muted-foreground">In Delivery</span>
+              </div>
             </div>
           </div>
         </CardContent>
@@ -363,14 +427,16 @@ export function CommercialsTab() {
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-lg flex items-center gap-2">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                 <Package className="h-5 w-5 text-primary" />
-                Milestone Payments
-              </CardTitle>
-              <p className="text-sm text-muted-foreground mt-1">
-                Payment schedule tied to milestone delivery
-              </p>
+              </div>
+              <div>
+                <CardTitle className="text-base">Milestone Payments</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  4 milestones • SAR 318K each
+                </p>
+              </div>
             </div>
             <Button variant="outline" size="sm" asChild>
               <Link to="#delivery">
@@ -380,85 +446,52 @@ export function CommercialsTab() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
+          <div className="space-y-2">
             {milestonePayments.map((payment) => (
               <div 
                 key={payment.milestoneCode}
                 className={cn(
-                  "p-4 rounded-lg border",
+                  "p-3 rounded-lg border flex items-center justify-between",
                   payment.status === "paid" && "bg-success/5 border-success/20",
                   payment.status === "invoiced" && "bg-info/5 border-info/20",
                   payment.status === "approved" && "bg-warning/5 border-warning/20",
                   payment.status === "in-delivery" && "bg-muted/30"
                 )}
               >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Badge variant="secondary" className="text-xs font-mono">
-                        {payment.milestoneCode}
-                      </Badge>
-                      <span className="text-sm font-semibold">{payment.milestoneName}</span>
-                    </div>
+                <div className="flex items-center gap-3 flex-1">
+                  <Badge variant="secondary" className="text-xs font-mono shrink-0">
+                    {payment.milestoneCode}
+                  </Badge>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground truncate">
+                      {payment.milestoneName}
+                    </p>
                     <p className="text-xs text-muted-foreground">
-                      SAR {payment.value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      SAR {(payment.value / 1000).toFixed(0)}K
+                      {payment.paymentDate && ` • Paid ${payment.paymentDate}`}
+                      {payment.approvalDate && !payment.paymentDate && ` • Approved ${payment.approvalDate}`}
                     </p>
                   </div>
-                  <Badge 
-                    variant="outline" 
-                    className={cn(
-                      "text-xs",
-                      payment.status === "paid" && "bg-success/10 text-success border-success/20",
-                      payment.status === "invoiced" && "bg-info/10 text-info border-info/20",
-                      payment.status === "approved" && "bg-warning/10 text-warning border-warning/20",
-                      payment.status === "in-delivery" && "bg-muted text-muted-foreground"
-                    )}
-                  >
-                    {payment.status === "paid" && <CheckCircle2 className="h-3 w-3 mr-1" />}
-                    {payment.status === "invoiced" && <FileText className="h-3 w-3 mr-1" />}
-                    {payment.status === "approved" && <Clock className="h-3 w-3 mr-1" />}
-                    {payment.status.charAt(0).toUpperCase() + payment.status.slice(1).replace("-", " ")}
-                  </Badge>
                 </div>
-
-                {/* Payment Timeline */}
-                <div className="grid grid-cols-3 gap-3 text-xs">
-                  {payment.approvalDate && (
-                    <div className="p-2 rounded bg-background/50">
-                      <p className="text-muted-foreground mb-0.5">Approved</p>
-                      <p className="font-medium">{payment.approvalDate}</p>
-                    </div>
+                
+                <Badge 
+                  variant="outline" 
+                  className={cn(
+                    "text-xs shrink-0",
+                    payment.status === "paid" && "bg-success/10 text-success border-success/20",
+                    payment.status === "invoiced" && "bg-info/10 text-info border-info/20",
+                    payment.status === "approved" && "bg-warning/10 text-warning border-warning/20",
+                    payment.status === "in-delivery" && "bg-muted text-muted-foreground"
                   )}
-                  {payment.invoiceDate && (
-                    <div className="p-2 rounded bg-background/50">
-                      <p className="text-muted-foreground mb-0.5">Invoiced</p>
-                      <p className="font-medium">{payment.invoiceDate}</p>
-                      {payment.invoiceNumber && (
-                        <p className="text-muted-foreground font-mono text-[10px]">{payment.invoiceNumber}</p>
-                      )}
-                    </div>
-                  )}
-                  {payment.paymentDate && (
-                    <div className="p-2 rounded bg-background/50">
-                      <p className="text-muted-foreground mb-0.5">Paid</p>
-                      <p className="font-medium text-success">{payment.paymentDate}</p>
-                    </div>
-                  )}
-                  {payment.dueDate && !payment.paymentDate && (
-                    <div className="p-2 rounded bg-background/50">
-                      <p className="text-muted-foreground mb-0.5">Due Date</p>
-                      <p className="font-medium">{payment.dueDate}</p>
-                    </div>
-                  )}
-                </div>
-
-                {/* Actions */}
-                {payment.status === "approved" && (
-                  <div className="mt-3 pt-3 border-t border-border flex items-center gap-2">
-                    <AlertCircle className="h-3.5 w-3.5 text-warning" />
-                    <span className="text-xs text-warning">Ready to invoice - milestone accepted</span>
-                  </div>
-                )}
+                >
+                  {payment.status === "paid" && <CheckCircle2 className="h-3 w-3 mr-1" />}
+                  {payment.status === "invoiced" && <FileText className="h-3 w-3 mr-1" />}
+                  {payment.status === "approved" && <Clock className="h-3 w-3 mr-1" />}
+                  {payment.status === "paid" && "Paid"}
+                  {payment.status === "invoiced" && "Invoiced"}
+                  {payment.status === "approved" && "Ready to Invoice"}
+                  {payment.status === "in-delivery" && "In Delivery"}
+                </Badge>
               </div>
             ))}
           </div>
@@ -469,13 +502,17 @@ export function CommercialsTab() {
       {changeOrders.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <History className="h-5 w-5 text-primary" />
-              Change Orders
-            </CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Approved scope and budget changes
-            </p>
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                <History className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <CardTitle className="text-base">Change Orders</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Approved scope and budget changes
+                </p>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -536,44 +573,42 @@ export function CommercialsTab() {
       <Card>
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-              <Hash className="h-5 w-5 text-primary" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
+              <Hash className="h-5 w-5 text-muted-foreground" />
             </div>
             <div>
-              <CardTitle className="text-base">Service Request Information</CardTitle>
-              <p className="text-sm text-muted-foreground">Contract and engagement details</p>
+              <CardTitle className="text-base">Service Request Details</CardTitle>
+              <p className="text-sm text-muted-foreground">Contract and engagement information</p>
             </div>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="space-y-1.5">
-              <p className="text-sm text-muted-foreground">Service Order No.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="p-3 rounded-lg bg-muted/30">
+              <p className="text-xs text-muted-foreground mb-1">Service Order No.</p>
               <p className="font-mono font-semibold text-foreground">{mockServiceInfo.serviceOrderNo}</p>
             </div>
-            <div className="space-y-1.5">
-              <p className="text-sm text-muted-foreground">Service Name</p>
+            <div className="p-3 rounded-lg bg-muted/30">
+              <p className="text-xs text-muted-foreground mb-1">Service Name</p>
               <p className="font-medium text-foreground">{mockServiceInfo.serviceName}</p>
             </div>
-            <div className="space-y-1.5">
-              <p className="text-sm text-muted-foreground">Status</p>
-              <div>
-                <Badge variant="outline" className="bg-success/10 text-success border-success/20">
-                  {mockServiceInfo.status}
-                </Badge>
-              </div>
-            </div>
-            <div className="space-y-1.5">
-              <p className="text-sm text-muted-foreground">Requested By</p>
+            <div className="p-3 rounded-lg bg-muted/30">
+              <p className="text-xs text-muted-foreground mb-1">Requested By</p>
               <p className="font-medium text-foreground">{mockServiceInfo.requestedBy}</p>
             </div>
-            <div className="space-y-1.5">
-              <p className="text-sm text-muted-foreground">Organization</p>
+            <div className="p-3 rounded-lg bg-muted/30">
+              <p className="text-xs text-muted-foreground mb-1">Organization</p>
               <p className="font-medium text-foreground">{mockServiceInfo.organization}</p>
             </div>
-            <div className="space-y-1.5">
-              <p className="text-sm text-muted-foreground">Requested Date</p>
+            <div className="p-3 rounded-lg bg-muted/30">
+              <p className="text-xs text-muted-foreground mb-1">Requested Date</p>
               <p className="font-medium text-foreground">{mockServiceInfo.requestedDate}</p>
+            </div>
+            <div className="p-3 rounded-lg bg-muted/30">
+              <p className="text-xs text-muted-foreground mb-1">Contract Value</p>
+              <p className="font-semibold text-foreground">
+                SAR {adjustedContractValue.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </p>
             </div>
           </div>
         </CardContent>

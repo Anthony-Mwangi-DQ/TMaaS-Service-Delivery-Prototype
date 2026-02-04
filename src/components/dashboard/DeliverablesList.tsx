@@ -283,9 +283,21 @@ function DeliverableRow({ deliverable }: { deliverable: Deliverable }) {
 
           <div className="flex items-center gap-2">
             {deliverable.status === "pending-acceptance" && (
-              <Button size="sm" className="bg-primary hover:bg-primary/90">
-                <CheckCircle2 className="h-4 w-4 mr-1.5" />
-                Accept
+              <>
+                <Button size="sm" className="bg-success hover:bg-success/90 text-white">
+                  <CheckCircle2 className="h-4 w-4 mr-1.5" />
+                  Approve
+                </Button>
+                <Button size="sm" variant="outline" className="border-warning text-warning hover:bg-warning/10">
+                  <MessageSquare className="h-4 w-4 mr-1.5" />
+                  Request Changes
+                </Button>
+              </>
+            )}
+            {(deliverable.status === "in-progress" || deliverable.status === "closed") && hasVersions && (
+              <Button size="sm" variant="outline">
+                <MessageSquare className="h-4 w-4 mr-1.5" />
+                Add Feedback
               </Button>
             )}
             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -388,20 +400,20 @@ export function DeliverablesList() {
               <Package className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-foreground">Deliverables</h2>
+              <h2 className="text-base font-semibold text-foreground">Deliverables Management</h2>
               <p className="text-sm text-muted-foreground">
-                Contractual outputs grouped by milestone
+                Review outputs, provide feedback, and approve deliverables
               </p>
             </div>
           </div>
           <div className="flex items-center gap-4">
             <div className="text-right">
               <p className="text-2xl font-bold text-foreground">{closedDeliverables}/{totalDeliverables}</p>
-              <p className="text-xs text-muted-foreground">Completed</p>
+              <p className="text-xs text-muted-foreground">Approved</p>
             </div>
             {pendingAcceptance > 0 && (
-              <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20">
-                {pendingAcceptance} Pending Acceptance
+              <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20 text-sm px-3 py-1">
+                {pendingAcceptance} Awaiting Your Review
               </Badge>
             )}
           </div>
